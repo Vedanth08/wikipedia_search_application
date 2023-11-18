@@ -2,16 +2,18 @@ let searchInputel = document.getElementById('searchInput');
 
 let searchResultsel = document.getElementById('searchResults');
 
+ let spinnnerel = document.getElementById('spinner');
+
 
 function createandAppendsearchResult(results){
+
+    let {link, title, description} = results;
 
     // Div Container -- 
 
     let divContainer = document.createElement('div');
 
     divContainer.classList.add('result-item');
-
-    searchResultsel.appendChild(divContainer);
     
     // Anchor Title -- 
 
@@ -19,7 +21,7 @@ function createandAppendsearchResult(results){
 
     anchorTitle.classList.add('result-title');
 
-    anchorTitle.textContent = searchInputel;
+    anchorTitle.textContent = title;
 
     divContainer.appendChild(anchorTitle);
 
@@ -35,6 +37,12 @@ function createandAppendsearchResult(results){
 
     anchorURL.classList.add('resulr-url');
 
+    anchorURL.href = link;
+
+    anchorURL.target = "_blank";
+
+    anchorURL.textContent = link;
+
     divContainer.appendChild(anchorURL);
 
     // line break
@@ -45,21 +53,28 @@ function createandAppendsearchResult(results){
 
     // Description -- result-description
 
-    let description = document.createElement('p');
+    let Resultdescription = document.createElement('p');
 
-    description.classList.add('result-description');
+    Resultdescription.classList.add('result-description');
 
-    divContainer.appendChild(description);
+    Resultdescription.textContent = description;
+
+    divContainer.appendChild(Resultdescription);
+
+    searchResultsel.appendChild(divContainer);
 
 };
 
-function displaySearchResults(search_results){
 
-    results =  search_results[4];
+function displaySearchResults(searchResults){
 
-    console.log(results);
+    spinnnerel.classList.toggle("d-none");
 
-    createandAppendsearchResult(results);
+    for ( let results of searchResults ){
+
+        createandAppendsearchResult(results);
+
+    }
 
 }
 
@@ -68,9 +83,13 @@ function searchInput(event){
 
     if ( event.key === "Enter" ){
 
-        searchInputel = searchInputel.value;
+        spinnnerel.classList.toggle("d-none");
 
-        let url = "https://apis.ccbp.in/wiki-search?search=" + searchInputel;
+        searchResultsel.textContent = "";
+
+        let searchInput = searchInputel.value;
+
+        let url = "https://apis.ccbp.in/wiki-search?search=" + searchInput;
 
         let options = {
             method : "GET"
@@ -84,7 +103,7 @@ function searchInput(event){
         })
         .then(function(jsonData){
 
-            let {search_results} = jsonData; // short form of storing objects and arrays and assigning to a variable
+            let { search_results } = jsonData; // short form of storing objects and arrays and assigning to a variable
 
             displaySearchResults(search_results);
 
